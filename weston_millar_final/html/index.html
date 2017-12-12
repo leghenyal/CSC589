@@ -1,0 +1,171 @@
+<html>
+<head>
+<title>CSC 589 Final Project</title>
+<link href='http://fonts.googleapis.com/css?family=Nunito:300|Crimson+Text|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" title="Default" href="styles/github.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>  
+
+<link rel="stylesheet" href="highlighting/styles/default.css">
+<script src="highlighting/highlight.pack.js"></script>
+
+<style type="text/css">
+body {
+	margin: 0px;
+	width: 100%;
+	font-family: 'Crimson Text', serif;
+	font-size: 20px;
+	background: #fcfcfc;
+}
+h1 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 28px;
+	margin: 25px 0px 0px 0px;
+	text-transform: uppercase;
+
+}
+
+h2 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 32px;
+	margin: 15px 0px 35px 0px;
+	color: #333;	
+	word-spacing: 3px;
+}
+
+h3 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 26px;
+	margin: 10px 0px 10px 0px;
+	color: #333;
+	word-spacing: 2px;
+}
+h4 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 22px;
+	margin: 10px 0px 10px 0px;
+	color: #333;
+	word-spacing: 2px;
+}
+
+h5 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 18px;
+	margin: 10px 0px 10px 0px;
+	color: #111;
+	word-spacing: 2px;
+}
+
+p, li {
+	color: #444;
+}
+
+a {
+	color: #DE3737;
+}
+
+.container {
+	margin: 0px auto 0px auto;
+	width: 960px;
+}
+
+#header {
+	background: #333;
+	width: 100%;
+}
+
+#headersub {
+	color: #ccc;
+	width: 960px;
+	margin: 0px auto 0px auto;
+	padding: 20px 0px 20px 0px;
+}
+
+.chart {
+	width: 480px;
+}
+.lol {
+	font-size: 16px;
+	color: #888;
+	font-style: italic;
+}
+.sep {
+	height: 1px;
+	width: 100%;
+	background: #999;
+	margin: 20px 0px 20px 0px;
+}
+.footer{
+	font-size: 16px;
+}
+.latex {
+	width: 100%;
+}
+
+.latex img {
+	display: block;
+	margin: 0px auto 0px auto;
+}
+
+pre {
+	font-family: 'Droid Sans Mono';
+	font-size: 14px;
+}
+
+td img {
+  vertical-align: middle;
+}
+
+#contents a {
+}
+</style>
+<script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="header" >
+<div id="headersub">
+<h1>Weston Millar <span style="color: #DE3737"></span></h1>
+</div>
+</div>
+<div class="container">
+<h2>CSC 589 AU / Final Project / Image Classification with Pre-Trained AlexNet</h2>
+
+<img src="alex.png"/>
+<p style="font-size: 14px">AlexNet Architecture</p>
+</div>
+
+<p>  In this project, our objective was to classify a mixed series of pictures of dogs and food. To do so, we cloned and used a pre-trained Deep Convolutional Neural Network called AlexNet from <a href="https://github.com/kratzert/finetune_alexnet_with_tensorflow">Frederik Kratzert's GitHub.</a> Naturally this would be a routine task for AlexNet, especially since it was pre-trained using ImageNet as a database. What threw a curveball in this project was that our dog and food images consisted heavily of normal dogs, dogs dressed up in hot dog costumes, hot dogs, and hot dogs creatively fashioned to look like dogs and other animals. We were tasked with fine-tuning the AlexNet in order to improve the accuracy of the classification for our very specific dataset.</p>
+
+<div style="clear:both">
+<h3>Fine Tuning and Classification</h3>
+
+<p> 	Fine-Tuning for the AlexNet was relatively straightfoward- it serves as an extra layer of training and validation for the network using a more targeted and much smaller selection of images. Detailed in Kratzert's GitHub linked above, the provided finetune.py operates on the last two convolutional layers of the network and serves to train an additional hurdle for test images to pass as their class scores are adjusted to the weight provided by reference images. To tune this AlexNet, 9 training and 9 validation images of hot dogs on the food side were chosen and identified for finetune.py (~15.5% of the total set each). I chose to only use food images instead of dog images because the classification will attempt to identify dogs by specific dog breed and I suspected having one validation image labeled 'dachsund' and another 'scottish terrier' and so forth would help less than all of them being labeled 'hot dog'.</p>
+<p> 	Barring one that I'm letting slide because it identified a top-down of a hotdog cut up to look like a crab as an actual crab, the tuned AlexNet correctly classified 37 of the pictures, for a 63.8% accuracy rating. This is not great, in fact it's nowhere even near 'good'. The blame for this can be traced to the peculiarity of our dataset. The majority of the dogs in hot dog costumes were properly identified while most of the dogs curled up in beds or on the ground were not. I suspect this is due to most of the features the network uses to distinguish a dog (face shape, body shape, limbs, etc.) being effectively hidden to the computer. Similarly, regular hot dogs and other food-ish looking pictures were readily identified, but the network collapsed once the food dominantly appeared as something that was not food.</p>
+
+<h3>Some Examples</h3>
+
+<tr>
+<td>
+<img src="doggood.png" width="49.5%"/>
+<img src="dogbad.png" width="49.5%"/>
+<p style="font-size: 14px">Dogs: Success vs failure is determined by the defining dog features that are present in the former and hidden in the latter </p>
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="foodgood.png" width="49.5%"/>
+<img src="foodbad.png"  width="49.5%"/>
+<p style="font-size: 14px">Food: The same as above occurs when the food starts to lose the shape the network recognizes</p>
+</td>
+</tr>
+
+</div>
+</body>
+</html>
